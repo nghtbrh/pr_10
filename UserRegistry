@@ -1,0 +1,102 @@
+import java.time.LocalDateTime;
+import java.util.HashSet;
+
+public class UserRegistry {
+
+    private HashSet<User> users = new HashSet<>();
+    private int nextId = 1;
+    
+    public void registerUser(String login, String password) {
+
+        User newUser = new User(nextId, login, password);
+
+        if (users.contains(newUser)) {
+            System.out.println("користувач " + login + " вже є у списку");
+            return;
+        }
+
+        users.add(newUser);
+        nextId++;
+
+        System.out.println("користувач зареєстрований");
+    }
+    
+    public void loginUser(String login, String password) {
+
+        for (User user : users) {
+
+            if (user.getName().equals(login)
+                    && user.getPassword().equals(password)) {
+
+                user.setLoggedIn(true);
+                user.setLastLoginDate(LocalDateTime.now());
+
+                System.out.println("вхід виконано");
+                return;
+            }
+        }
+
+        System.out.println("неможливо ідентифікувати або аутентифікувати користувача");
+    }
+    
+    public void logoutUser(int userId) {
+
+        for (User user : users) {
+
+            if (user.getId() == userId) {
+
+                user.setLoggedIn(false);
+
+                System.out.println("користувач вийшов");
+                return;
+            }
+        }
+
+        System.out.println("користувача не знайдено");
+    }
+    
+    public boolean isUserRegistered(String login) {
+
+        for (User user : users) {
+
+            if (user.getName().equals(login)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    public void removeUser(int id) {
+
+        User userToRemove = null;
+
+        for (User user : users) {
+
+            if (user.getId() == id) {
+                userToRemove = user;
+                break;
+            }
+        }
+
+        if (userToRemove != null) {
+            users.remove(userToRemove);
+            System.out.println("користувач видалений");
+        } else {
+            System.out.println("користувача не знайдено");
+        }
+    }
+    
+    public void printTotalUniqueUsers() {
+        System.out.println("кількість користувачів: " + users.size());
+    }
+    
+    public void displayAllUsers() {
+
+        System.out.println("список користувачів:");
+
+        for (User user : users) {
+            System.out.println(user);
+        }
+    }
+}
